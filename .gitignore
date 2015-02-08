@@ -26,3 +26,15 @@
 *.exe
 *.out
 *.app
+
+# Added by aktokaji
+x64
+release
+debug
+Release
+Debug
+*.sdf
+*.opensdf
+*.user
+Makefile*
+*.suo
