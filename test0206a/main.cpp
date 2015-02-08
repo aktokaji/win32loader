@@ -109,6 +109,7 @@ static void on_process_attach(void)
 		DBG("mys=%s", mys.c_str());
 		win32::global_string mys2 = "漢字";
 		DBG("mys2=%s", mys2.c_str());
+		if (1) return;
 		win32::global_vector<int> v;
 		v.push_back(1111);
 		v.push_back(2222);

@@ -9,77 +9,77 @@
 #define DBG(format, ...) win32_errorfA("[WIN32_VECTOR] " format "\n", ## __VA_ARGS__)
 
 /* extern */
-void   win32_vector_clear(HANDLE heap, DWORD width, char **vector)
+void   win32_array_clear(HANDLE heap, DWORD width, char **array)
 {
-	win32_vector_resize(heap, width, vector, 0);
+	win32_array_resize(heap, width, array, 0);
 }
 
 /* extern */
-DWORD  win32_vector_size(HANDLE heap, DWORD width, char **vector)
+DWORD  win32_array_size(HANDLE heap, DWORD width, char **array)
 {
 	assert(width > 0);
-	if(!vector) return 0;
-	if(!*vector) return 0;
-	size_t v_byte_size = win32_heap_memlen(heap, *vector);
+	if(!array) return 0;
+	if(!*array) return 0;
+	size_t v_byte_size = win32_heap_memlen(heap, *array);
 	DWORD v_width_size = v_byte_size / width;
 	return v_width_size;
 }
 
 /* extern */
-void   win32_vector_resize(HANDLE heap, DWORD width, char **vector, DWORD size)
+void   win32_array_resize(HANDLE heap, DWORD width, char **array, DWORD size)
 {
 	assert(width > 0);
-	if(!vector) return;
+	if(!array) return;
 	if(!size)
 	{
-		if(*vector)
+		if(*array)
 		{
-			win32_heap_free(heap, *vector);
-			*vector = NULL;
+			win32_heap_free(heap, *array);
+			*array = NULL;
 		}
 		return;
 	}
-	if(!*vector)
+	if(!*array)
 	{
-		*vector = (char *)win32_heap_malloc(heap, width*size);
+		*array = (char *)win32_heap_malloc(heap, width*size);
 	}
 	else
 	{
-		*vector = (char *)win32_heap_realloc(heap, *vector, width*size);
+		*array = (char *)win32_heap_realloc(heap, *array, width*size);
 	}
 }
 
 /* extern */
-void   win32_vector_reserve(HANDLE heap, DWORD width, char **vector, DWORD size)
+void   win32_array_reserve(HANDLE heap, DWORD width, char **array, DWORD size)
 {
 	assert(width > 0);
-	if(!vector) return;
-	DWORD v_old_size = win32_vector_size(heap, width, vector);
+	if(!array) return;
+	DWORD v_old_size = win32_array_size(heap, width, array);
 	if(v_old_size >= size) return;
-	win32_vector_resize(heap, width, vector, size);
+	win32_array_resize(heap, width, array, size);
 }
 
 /* extern */
-void   win32_vector_get(HANDLE heap, DWORD width, char **vector, DWORD pos, char *val)
+void   win32_array_get(HANDLE heap, DWORD width, char **array, DWORD pos, char *val)
 {
 	assert(width > 0);
 	if(!val) return;
 	ZeroMemory(val, width);
-	if(!vector) return;
-	if(!*vector) return;
-	DWORD v_old_size = win32_vector_size(heap, width, vector);
+	if(!array) return;
+	if(!*array) return;
+	DWORD v_old_size = win32_array_size(heap, width, array);
 	if(pos >= v_old_size) return;
-	char *v_src = &(*vector)[width*pos];
+	char *v_src = &(*array)[width*pos];
 	CopyMemory(val, v_src, width);
 }
 
 /* extern */
-void   win32_vector_set(HANDLE heap, DWORD width, char **vector, DWORD pos, char *val)
+void   win32_array_set(HANDLE heap, DWORD width, char **array, DWORD pos, char *val)
 {
 	assert(width > 0);
-	if(!vector) return;
-	win32_vector_reserve(heap, width, vector, pos+1);
-	char *v_dest = &(*vector)[width*pos];
+	if(!array) return;
+	win32_array_reserve(heap, width, array, pos+1);
+	char *v_dest = &(*array)[width*pos];
 	if(val)
 	{
 		CopyMemory(v_dest, val, width);
@@ -91,48 +91,48 @@ void   win32_vector_set(HANDLE heap, DWORD width, char **vector, DWORD pos, char
 }
 
 /* extern */
-void   win32_vector_push_back(HANDLE heap, DWORD width, char **vector, char *val)
+void   win32_array_push_back(HANDLE heap, DWORD width, char **array, char *val)
 {
 	assert(width > 0);
-	if(!vector) return;
-	DWORD v_old_size = win32_vector_size(heap, width, vector);
-	win32_vector_set(heap, width, vector, v_old_size, val);
+	if(!array) return;
+	DWORD v_old_size = win32_array_size(heap, width, array);
+	win32_array_set(heap, width, array, v_old_size, val);
 }
 
 /* extern */
-void   win32_vector_erase(HANDLE heap, DWORD width, char **vector, DWORD pos, char *val)
+void   win32_array_erase(HANDLE heap, DWORD width, char **array, DWORD pos, char *val)
 {
 	assert(width > 0);
 	if(val) ZeroMemory(val, width);
-	if(!vector) return;
-	if(!*vector) return;
-	DWORD v_old_size = win32_vector_size(heap, width, vector);
+	if(!array) return;
+	if(!*array) return;
+	DWORD v_old_size = win32_array_size(heap, width, array);
 	if(pos >= v_old_size) return;
 	if(val)
 	{
-		char *v_src = &(*vector)[width*pos];
+		char *v_src = &(*array)[width*pos];
 		CopyMemory(val, v_src, width);
 	}
 	for(int64_t i=pos+1; i<v_old_size; i++)
 	{
-		CopyMemory(&(*vector)[width*(i-1)], &(*vector)[width*i], width);
+		CopyMemory(&(*array)[width*(i-1)], &(*array)[width*i], width);
 	}
-	win32_vector_resize(heap, width, vector, v_old_size-1);
+	win32_array_resize(heap, width, array, v_old_size-1);
 }
 
 /* extern */
-void   win32_vector_insert(HANDLE heap, DWORD width, char **vector, DWORD pos, char *val)
+void   win32_array_insert(HANDLE heap, DWORD width, char **array, DWORD pos, char *val)
 {
 	assert(width > 0);
-	if(!vector) return;
-	win32_vector_reserve(heap, width, vector, pos+1);
-	DWORD v_old_size = win32_vector_size(heap, width, vector);
-	win32_vector_resize(heap, width, vector, v_old_size+1);
+	if(!array) return;
+	win32_array_reserve(heap, width, array, pos+1);
+	DWORD v_old_size = win32_array_size(heap, width, array);
+	win32_array_resize(heap, width, array, v_old_size+1);
 	for (int64_t i = v_old_size-1; i >= pos; i--)
 	{
-		CopyMemory(&(*vector)[width*(i+1)], &(*vector)[width*i], width);
+		CopyMemory(&(*array)[width*(i+1)], &(*array)[width*i], width);
 	}
-	char *v_dest = &(*vector)[width*pos];
+	char *v_dest = &(*array)[width*pos];
 	if(val)
 	{
 		CopyMemory(v_dest, val, width);
@@ -144,117 +144,117 @@ void   win32_vector_insert(HANDLE heap, DWORD width, char **vector, DWORD pos, c
 }
 
 /* extern */
-void   win32_thread_char_clear(char **vector)
+void   win32_thread_char_clear(char **array)
 {
-	win32_thread_vector_resize(sizeof(**vector), (char **)vector, 0);
+	win32_thread_array_resize(sizeof(**array), (char **)array, 0);
 }
 
 /* extern */
-DWORD   win32_thread_char_size(char **vector)
+DWORD   win32_thread_char_size(char **array)
 {
-	return win32_thread_vector_size(sizeof(**vector), (char **)vector);
+	return win32_thread_array_size(sizeof(**array), (char **)array);
 }
 
 /* extern */
-void   win32_thread_char_resize(char **vector, DWORD size)
+void   win32_thread_char_resize(char **array, DWORD size)
 {
-	win32_thread_vector_resize(sizeof(**vector), (char **)vector, size);
+	win32_thread_array_resize(sizeof(**array), (char **)array, size);
 }
 
 /* extern */
-void   win32_thread_char_reserve(char **vector, DWORD size)
+void   win32_thread_char_reserve(char **array, DWORD size)
 {
-	win32_thread_vector_reserve(sizeof(**vector), (char **)vector, size);
+	win32_thread_array_reserve(sizeof(**array), (char **)array, size);
 }
 
 /* extern */
-char   win32_thread_char_get(char **vector, DWORD pos)
+char   win32_thread_char_get(char **array, DWORD pos)
 {
 	char val;
-	win32_thread_vector_get(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_get(sizeof(**array), (char **)array, pos, (char *)&val);
 	return val;
 }
 
 /* extern */
-void   win32_thread_char_set(char **vector, DWORD pos, char val)
+void   win32_thread_char_set(char **array, DWORD pos, char val)
 {
-	win32_thread_vector_set(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_set(sizeof(**array), (char **)array, pos, (char *)&val);
 }
 
 /* extern */
-void   win32_thread_char_push_back(char **vector, char val)
+void   win32_thread_char_push_back(char **array, char val)
 {
-	win32_thread_vector_push_back(sizeof(**vector), (char **)vector, (char *)&val);
+	win32_thread_array_push_back(sizeof(**array), (char **)array, (char *)&val);
 }
 
 /* extern */
-char   win32_thread_char_erase(char **vector, DWORD pos)
+char   win32_thread_char_erase(char **array, DWORD pos)
 {
 	char val;
-	win32_thread_vector_erase(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_erase(sizeof(**array), (char **)array, pos, (char *)&val);
 	return val;
 }
 
 /* extern */
-void   win32_thread_char_insert(char **vector, DWORD pos, char val)
+void   win32_thread_char_insert(char **array, DWORD pos, char val)
 {
-	win32_thread_vector_insert(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_insert(sizeof(**array), (char **)array, pos, (char *)&val);
 }
 
 /* extern */
-void    win32_thread_wchar_clear(wchar_t **vector)
+void    win32_thread_wchar_clear(wchar_t **array)
 {
-	win32_thread_vector_clear(sizeof(**vector), (char **)vector);
+	win32_thread_array_clear(sizeof(**array), (char **)array);
 }
 
 /* extern */
-DWORD   win32_thread_wchar_size(wchar_t **vector)
+DWORD   win32_thread_wchar_size(wchar_t **array)
 {
-	return win32_thread_vector_size(sizeof(**vector), (char **)vector);
+	return win32_thread_array_size(sizeof(**array), (char **)array);
 }
 
 /* extern */
-void    win32_thread_wchar_resize(wchar_t **vector, DWORD size)
+void    win32_thread_wchar_resize(wchar_t **array, DWORD size)
 {
-	win32_thread_vector_resize(sizeof(**vector), (char **)vector, size);
+	win32_thread_array_resize(sizeof(**array), (char **)array, size);
 }
 
 /* extern */
-void    win32_thread_wchar_reserve(wchar_t **vector, DWORD size)
+void    win32_thread_wchar_reserve(wchar_t **array, DWORD size)
 {
-	win32_thread_vector_reserve(sizeof(**vector), (char **)vector, size);
+	win32_thread_array_reserve(sizeof(**array), (char **)array, size);
 }
 
 /* extern */
-wchar_t win32_thread_wchar_get(wchar_t **vector, DWORD pos)
+wchar_t win32_thread_wchar_get(wchar_t **array, DWORD pos)
 {
 	wchar_t val;
-	win32_thread_vector_get(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_get(sizeof(**array), (char **)array, pos, (char *)&val);
 	return val;
 }
 
 /* extern */
-void    win32_thread_wchar_set(wchar_t **vector, DWORD pos, wchar_t val)
+void    win32_thread_wchar_set(wchar_t **array, DWORD pos, wchar_t val)
 {
-	win32_thread_vector_set(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_set(sizeof(**array), (char **)array, pos, (char *)&val);
 }
 
 /* extern */
-void    win32_thread_wchar_push_back(wchar_t **vector, wchar_t val)
+void    win32_thread_wchar_push_back(wchar_t **array, wchar_t val)
 {
-	win32_thread_vector_push_back(sizeof(**vector), (char **)vector, (char *)&val);
+	win32_thread_array_push_back(sizeof(**array), (char **)array, (char *)&val);
 }
 
 /* extern */
-wchar_t win32_thread_wchar_erase(wchar_t **vector, DWORD pos)
+wchar_t win32_thread_wchar_erase(wchar_t **array, DWORD pos)
 {
 	wchar_t val;
-	win32_thread_vector_erase(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_erase(sizeof(**array), (char **)array, pos, (char *)&val);
 	return val;
 }
 
 /* extern */
-void    win32_thread_wchar_insert(wchar_t **vector, DWORD pos, wchar_t val)
+void    win32_thread_wchar_insert(wchar_t **array, DWORD pos, wchar_t val)
 {
-	win32_thread_vector_insert(sizeof(**vector), (char **)vector, pos, (char *)&val);
+	win32_thread_array_insert(sizeof(**array), (char **)array, pos, (char *)&val);
 }

@@ -17,6 +17,11 @@
     <ClCompile Include="..\common_01\win32_vector.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common_01\win32.h" />
+    <ClInclude Include="..\common_01\win32_print.h" />
+    <ClInclude Include="..\common_01\win32_vector.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3BAB98AD-F18C-4DBD-8821-D3B47ACF9E05}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
