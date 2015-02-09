@@ -152,7 +152,6 @@ static void NTAPI main_tls_callback(PVOID hModule, DWORD dwReason, PVOID pReserv
 	DBG("main_tls_callback(%s)[end]: dwReason=0x%08x (%s)", TLS_CALLBACK_SECT, dwReason, win32_tls_callback_reason_label(dwReason));
 }
 TLS_CALLBACK_DECL(TLS_CALLBACK_SECT, __main_tls_callback__, main_tls_callback);
-//#pragma comment(linker, "/include:__main_tls_callback__")
 
 static int RunFromMemory(void);
 
