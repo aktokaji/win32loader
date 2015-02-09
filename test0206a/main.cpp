@@ -16,8 +16,6 @@
 #define DBG(format, ...) win32_printfA("[WMAIN(A)] " format "\n", ## __VA_ARGS__)
 #define DBGW(format, ...) win32_printfW(L"[WMAIN(W)] " format L"\n", ## __VA_ARGS__)
 
-//snv test
-
 struct win32_module
 {
 	HMODULE BaseAddress = 0;
