@@ -28,6 +28,7 @@
 *.app
 
 # Added by aktokaji
+Win32
 x64
 release
 debug
