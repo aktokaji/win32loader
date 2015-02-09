@@ -41,5 +41,8 @@
     <ClInclude Include="..\common_01\win32_vector.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\common_01\MemoryModule.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
