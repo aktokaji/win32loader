@@ -1,4 +1,5 @@
-﻿#undef NDEBUG
+﻿//git test
+#undef NDEBUG
 #include <assert.h>
 
 #include <windows.h>
