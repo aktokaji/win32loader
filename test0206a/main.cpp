@@ -1,4 +1,5 @@
-﻿#undef NDEBUG
+﻿// mod terst 2015/02/12 22:21
+#undef NDEBUG
 #include <assert.h>
 
 #include <windows.h>
